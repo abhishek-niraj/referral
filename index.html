@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delicious Referral</title>
+
+  <!-- Dynamic Smart App Banner for iOS -->
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code') || '';
+
+    const meta = document.createElement('meta');
+    meta.name = 'apple-itunes-app';
+    meta.content = `app-id=6736582983, app-argument=https://ddelicious.co.in/referral?code=${code}`;
+    document.head.appendChild(meta);
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background: #f9f9f9;
+    }
+    .referral-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      display: inline-block;
+    }
+    button {
+      background-color: #ff4d4f;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover {
+      background-color: #e84342;
+    }
+  </style>
+</head>
+<body>
+  <div class="referral-box">
+    <h1>Welcome to Delicious!</h1>
+    <p>Your referral code is: <strong id="refCode">...</strong></p>
+
+    <!-- Copy & Open App button -->
+    <button id="copyButton">Copy Referral Code & Open App</button>
+  </div>
+
+  <script>
+    document.getElementById('refCode').textContent = code || 'N/A';
+
+    document.getElementById('copyButton').addEventListener('click', () => {
+      if (!code) return;
+
+      navigator.clipboard.writeText(code).then(() => {
+        alert('Referral code copied to clipboard!');
+
+        // Redirect based on platform
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        if (isAndroid) {
+          window.location.href = `https://play.google.com/store/apps/details?id=com.user.delicious.d&referrer=code=${code}`;
+        } else {
+          // iOS: Smart App Banner or App Store link
+          window.location.href = `https://apps.apple.com/app/id6736582983`;
+        }
+
+      }).catch(err => {
+        alert('Failed to copy referral code.');
+        console.log(err);
+      });
+    });
+  </script>
+</body>
+</html>
