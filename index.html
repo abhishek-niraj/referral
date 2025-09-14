@@ -3,77 +3,192 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Delicious Referral</title>
+  <title> D'Delicious Referral</title>
 
-  <!-- Dynamic Smart App Banner for iOS -->
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code') || '';
-
-    const meta = document.createElement('meta');
-    meta.name = 'apple-itunes-app';
-    meta.content = `app-id=6736582983, app-argument=https://ddelicious.co.in/referral?code=${code}`;
-    document.head.appendChild(meta);
-  </script>
+  <!-- Font Awesome for copy icon -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       text-align: center;
       padding: 50px;
-      background: #f9f9f9;
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
+
     .referral-box {
       background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      padding: 50px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
       display: inline-block;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
     }
-    button {
+
+    h1 {
+      color: #ff4d4f;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 16px;
+      color: #333;
+      margin: 10px 0;
+    }
+
+    .button {
       background-color: #ff4d4f;
       color: white;
       border: none;
-      padding: 15px 30px;
+      padding: 16px 40px;
       font-size: 16px;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       margin-top: 20px;
+      transition: 0.3s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      display: inline-flex;
+      align-items: center;
     }
-    button:hover {
+
+    .button:hover {
       background-color: #e84342;
+      transform: translateY(-2px);
+    }
+
+    .button i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+
+    .alternative {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #007bff;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .instruction {
+      margin-top: 25px;
+      text-align: left;
+      max-width: 360px;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 15px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .step-number {
+      display: inline-block;
+      background: #ff4d4f;
+      color: white;
+      font-weight: bold;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+      text-align: center;
+      margin-right: 12px;
+      font-size: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .ip-address {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #ff4d4f;
+    }
+
+    /* Clipboard permission notice */
+    .clipboard-instruction {
+      margin-top: 20px;
+      background: #fff3cd;
+      color: #856404;
+      padding: 15px 20px;
+      border-radius: 10px;
+      border: 1px solid #ffeeba;
+      font-size: 14px;
+      text-align: left;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      line-height: 1.5;
+    }
+    .clipboard-instruction strong {
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
+
   <div class="referral-box">
-    <h1>Welcome to Delicious!</h1>
+    <h1>Welcome to D'Delicious!</h1>
     <p>Your referral code is: <strong id="refCode">...</strong></p>
-    <p>Your public IP address is: <strong id="userIp">Loading...</strong></p>
-    <button id="copyButton">Copy Referral Code & Open App</button>
+
+    <!-- Get App Button -->
+    <button class="button" id="copyButton">
+      <i class="fas fa-copy"></i> Get the App
+    </button>
+
+    <!-- Alternative link -->
+    <div class="alternative" id="openWithoutCopy">
+      Get the app without copying
+    </div>
+
+    <!-- Instructions -->
+    <div class="instruction">
+      <div class="step"><span class="step-number">1</span> Click the button to copy your referral code.</div>
+      <div class="step"><span class="step-number">2</span> Open the app and allow clipboard access.</div>
+      <div class="step"><span class="step-number">3</span> Your referral points will be automatically applied.</div>
+    </div>
+
+    <!-- Clipboard permission notice -->
+    <div class="clipboard-instruction">
+      ⚠️ <strong>Important:</strong> To successfully apply your referral points, you <u>must allow clipboard access</u> when opening the app. 
+      If denied, the referral code cannot be automatically applied.
+    </div>
+
+    <!-- IP Display -->
+   
   </div>
 
   <script>
-    document.getElementById('refCode').textContent = code || 'N/A';
+    // Get referral code from URL
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code') || 'N/A';
+    document.getElementById('refCode').textContent = code;
 
-    // Fetch and display public IP address
-    async function showIp() {
-      try {
-        const response = await fetch('https://api.ipify.org?format=json');
-        const data = await response.json();
-        document.getElementById('userIp').textContent = data.ip;
-      } catch (err) {
-        document.getElementById('userIp').textContent = 'Unable to fetch IP';
-        console.error(err);
-      }
-    }
-    showIp();
-
-    document.getElementById('copyButton').addEventListener('click', () => {
+   
+    // Copy & redirect button
+    document.getElementById('copyButton').addEventListener('click', async () => {
       if (!code) return;
 
-      navigator.clipboard.writeText(`referral_code=${code}`).then(() => {
-        alert('Referral code copied to clipboard!');
+      try {
+        if (navigator.permissions) {
+          const permission = await navigator.permissions.query({name: 'clipboard-write'});
+          if (permission.state === 'denied') {
+            alert('Please allow clipboard access in your browser settings.');
+            return;
+          }
+        }
+
+        await navigator.clipboard.writeText(`referral_code=${code}`);
+        alert('Referral code copied! Open the app to get your points.');
 
         const isAndroid = /Android/i.test(navigator.userAgent);
         if (isAndroid) {
@@ -82,10 +197,20 @@
           window.location.href = `https://apps.apple.com/app/id6736582983`;
         }
 
-      }).catch(err => {
-        alert('Failed to copy referral code.');
+      } catch (err) {
+        alert('Failed to copy referral code. Please copy manually.');
         console.log(err);
-      });
+      }
+    });
+
+    // Alternative: open app without copying
+    document.getElementById('openWithoutCopy').addEventListener('click', () => {
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      if (isAndroid) {
+        window.location.href = `https://play.google.com/store/apps/details?id=com.user.delicious.d`;
+      } else {
+        window.location.href = `https://apps.apple.com/app/id6736582983`;
+      }
     });
   </script>
 </body>
