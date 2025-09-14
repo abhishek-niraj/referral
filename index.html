@@ -22,7 +22,10 @@
 
     .referral-box {
       background: #fff;
-      padding: 50px;
+      padding-left: 50px;
+      padding-right: 50px;
+       padding-top:25px;
+       padding-bottom: 25px;
       border-radius: 15px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
       display: inline-block;
@@ -50,11 +53,12 @@
       font-size: 16px;
       border-radius: 10px;
       cursor: pointer;
-      margin-top: 20px;
+      margin-top: 15px;
       transition: 0.3s;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
       display: inline-flex;
       align-items: center;
+      text-decoration: none;
     }
 
     .button:hover {
@@ -68,15 +72,35 @@
     }
 
     .alternative {
-      margin-top: 15px;
+      margin-top: 10px;
       font-size: 14px;
       color: #007bff;
       cursor: pointer;
       text-decoration: underline;
     }
 
+    /* Clipboard permission notice */
+    .clipboard-instruction {
+      margin-bottom: 10px;
+        margin-top: 10px;
+      background: #fff3cd;
+      color: #856404;
+      padding: 15px 20px;
+      border-radius: 10px;
+      border: 1px solid #ffeeba;
+      font-size: 14px;
+      text-align: left;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      line-height: 1.5;
+    }
+    .clipboard-instruction strong {
+      font-weight: bold;
+    }
+
     .instruction {
-      margin-top: 25px;
       text-align: left;
       max-width: 360px;
       margin-left: auto;
@@ -84,6 +108,7 @@
       font-size: 15px;
       color: #555;
       line-height: 1.6;
+      margin-top: 0px;
     }
 
     .step {
@@ -106,32 +131,6 @@
       font-size: 16px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
-
-    .ip-address {
-      margin-top: 20px;
-      font-weight: bold;
-      color: #ff4d4f;
-    }
-
-    /* Clipboard permission notice */
-    .clipboard-instruction {
-      margin-top: 20px;
-      background: #fff3cd;
-      color: #856404;
-      padding: 15px 20px;
-      border-radius: 10px;
-      border: 1px solid #ffeeba;
-      font-size: 14px;
-      text-align: left;
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      line-height: 1.5;
-    }
-    .clipboard-instruction strong {
-      font-weight: bold;
-    }
   </style>
 </head>
 <body>
@@ -140,31 +139,26 @@
     <h1>Welcome to D'Delicious!</h1>
     <p>Your referral code is: <strong id="refCode">...</strong></p>
 
-    <!-- Get App Button -->
+   
+
+    <!-- Get App Buttons -->
     <button class="button" id="copyButton">
       <i class="fas fa-copy"></i> Get the App
     </button>
-
-    <!-- Alternative link -->
     <div class="alternative" id="openWithoutCopy">
       Get the app without copying
     </div>
-
-    <!-- Instructions -->
+ <!-- Clipboard permission notice -->
+    <div class="clipboard-instruction">
+      ⚠️ <strong>Important:</strong> To successfully apply your referral points, you <u>must allow clipboard access</u> when opening the app. 
+      If denied, the referral code cannot be automatically applied.
+    </div>
+    <!-- Instructions below buttons -->
     <div class="instruction">
       <div class="step"><span class="step-number">1</span> Click the button to copy your referral code.</div>
       <div class="step"><span class="step-number">2</span> Open the app and allow clipboard access.</div>
       <div class="step"><span class="step-number">3</span> Your referral points will be automatically applied.</div>
     </div>
-
-    <!-- Clipboard permission notice -->
-    <div class="clipboard-instruction">
-      ⚠️ <strong>Important:</strong> To successfully apply your referral points, you <u>must allow clipboard access</u> when opening the app. 
-      If denied, the referral code cannot be automatically applied.
-    </div>
-
-    <!-- IP Display -->
-   
   </div>
 
   <script>
@@ -173,33 +167,13 @@
     const code = params.get('code') || 'N/A';
     document.getElementById('refCode').textContent = code;
 
-   
-    // Copy & redirect button
-    document.getElementById('copyButton').addEventListener('click', async () => {
-      if (!code) return;
-
-      try {
-        if (navigator.permissions) {
-          const permission = await navigator.permissions.query({name: 'clipboard-write'});
-          if (permission.state === 'denied') {
-            alert('Please allow clipboard access in your browser settings.');
-            return;
-          }
-        }
-
-        await navigator.clipboard.writeText(`referral_code=${code}`);
-        alert('Referral code copied! Open the app to get your points.');
-
-        const isAndroid = /Android/i.test(navigator.userAgent);
-        if (isAndroid) {
-          window.location.href = `https://play.google.com/store/apps/details?id=com.user.delicious.d&referrer=code=${code}`;
-        } else {
-          window.location.href = `https://apps.apple.com/app/id6736582983`;
-        }
-
-      } catch (err) {
-        alert('Failed to copy referral code. Please copy manually.');
-        console.log(err);
+    // Get App button - direct redirect without alert
+    document.getElementById('copyButton').addEventListener('click', () => {
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      if (isAndroid) {
+        window.location.href = `https://play.google.com/store/apps/details?id=com.user.delicious.d&referrer=code=${code}`;
+      } else {
+        window.location.href = `https://apps.apple.com/app/id6736582983`;
       }
     });
 
