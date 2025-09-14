@@ -24,8 +24,8 @@
       background: #fff;
       padding-left: 50px;
       padding-right: 50px;
-       padding-top:25px;
-       padding-bottom: 25px;
+      padding-top: 25px;
+      padding-bottom: 25px;
       border-radius: 15px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
       display: inline-block;
@@ -79,10 +79,9 @@
       text-decoration: underline;
     }
 
-    /* Clipboard permission notice */
     .clipboard-instruction {
       margin-bottom: 10px;
-        margin-top: 10px;
+      margin-top: 10px;
       background: #fff3cd;
       color: #856404;
       padding: 15px 20px;
@@ -96,6 +95,7 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       line-height: 1.5;
     }
+
     .clipboard-instruction strong {
       font-weight: bold;
     }
@@ -139,21 +139,18 @@
     <h1>Welcome to D'Delicious!</h1>
     <p>Your referral code is: <strong id="refCode">...</strong></p>
 
-   
-
-    <!-- Get App Buttons -->
     <button class="button" id="copyButton">
       <i class="fas fa-copy"></i> Get the App
     </button>
     <div class="alternative" id="openWithoutCopy">
       Get the app without copying
     </div>
- <!-- Clipboard permission notice -->
+
     <div class="clipboard-instruction">
       ⚠️ <strong>Important:</strong> To successfully apply your referral points, you <u>must allow clipboard access</u> when opening the app. 
       If denied, the referral code cannot be automatically applied.
     </div>
-    <!-- Instructions below buttons -->
+
     <div class="instruction">
       <div class="step"><span class="step-number">1</span> Click the button to copy your referral code.</div>
       <div class="step"><span class="step-number">2</span> Open the app and allow clipboard access.</div>
@@ -161,31 +158,31 @@
     </div>
   </div>
 
-  <script>
-    // Get referral code from URL
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code') || 'N/A';
-    document.getElementById('refCode').textContent = code;
+<script>
+  // Get referral code from URL
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code') || 'N/A';
+  document.getElementById('refCode').textContent = code;
 
-    // Get App button - direct redirect without alert
-    document.getElementById('copyButton').addEventListener('click', () => {
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      if (isAndroid) {
-        window.location.href = `https://play.google.com/store/apps/details?id=com.user.delicious.d&referrer=code=${code}`;
-      } else {
-        window.location.href = `https://apps.apple.com/app/id6736582983`;
-      }
+  // Get App button - copy referral code in JSON format and then open App Store
+  document.getElementById('copyButton').addEventListener('click', () => {
+    const referralData = {
+      referral_code: code
+    };
+    const jsonString = JSON.stringify(referralData);
+    navigator.clipboard.writeText(jsonString).then(() => {
+      window.location.href = `https://apps.apple.com/app/id6736582983`;
+    }).catch(err => {
+      console.error('Failed to copy referral code:', err);
+      window.location.href = `https://apps.apple.com/app/id6736582983`;
     });
+  });
 
-    // Alternative: open app without copying
-    document.getElementById('openWithoutCopy').addEventListener('click', () => {
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      if (isAndroid) {
-        window.location.href = `https://play.google.com/store/apps/details?id=com.user.delicious.d`;
-      } else {
-        window.location.href = `https://apps.apple.com/app/id6736582983`;
-      }
-    });
-  </script>
+  // Alternative: open app without copying
+  document.getElementById('openWithoutCopy').addEventListener('click', () => {
+    window.location.href = `https://apps.apple.com/app/id6736582983`;
+  });
+</script>
+
 </body>
 </html>
