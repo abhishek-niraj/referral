@@ -49,27 +49,36 @@
   <div class="referral-box">
     <h1>Welcome to Delicious!</h1>
     <p>Your referral code is: <strong id="refCode">...</strong></p>
-
-    <!-- Copy & Open App button -->
+    <p>Your public IP address is: <strong id="userIp">Loading...</strong></p>
     <button id="copyButton">Copy Referral Code & Open App</button>
   </div>
 
   <script>
     document.getElementById('refCode').textContent = code || 'N/A';
 
+    // Fetch and display public IP address
+    async function showIp() {
+      try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        document.getElementById('userIp').textContent = data.ip;
+      } catch (err) {
+        document.getElementById('userIp').textContent = 'Unable to fetch IP';
+        console.error(err);
+      }
+    }
+    showIp();
+
     document.getElementById('copyButton').addEventListener('click', () => {
       if (!code) return;
 
-      // Copy in key=value format
       navigator.clipboard.writeText(`referral_code=${code}`).then(() => {
         alert('Referral code copied to clipboard!');
 
-        // Redirect based on platform
         const isAndroid = /Android/i.test(navigator.userAgent);
         if (isAndroid) {
           window.location.href = `https://play.google.com/store/apps/details?id=com.user.delicious.d&referrer=code=${code}`;
         } else {
-          // iOS: Smart App Banner or App Store link
           window.location.href = `https://apps.apple.com/app/id6736582983`;
         }
 
