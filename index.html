@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Delicious Referral</title>
 
   <!-- Dynamic Smart App Banner for iOS -->
@@ -60,7 +60,8 @@
     document.getElementById('copyButton').addEventListener('click', () => {
       if (!code) return;
 
-      navigator.clipboard.writeText(code).then(() => {
+      // Copy in key=value format
+      navigator.clipboard.writeText(`referral_code=${code}`).then(() => {
         alert('Referral code copied to clipboard!');
 
         // Redirect based on platform
